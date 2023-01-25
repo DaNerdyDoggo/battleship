@@ -274,4 +274,20 @@ public class GameBoard
       ships[shipHit].markHitCoord(coord);
       return shipHit;
    }
+
+   public int whichLeft()
+   {
+      int shipsLeft = 0;
+
+      for(int i=0; i<ships.length;i++)
+      {
+         if(!ships[i].getSunk())
+         {
+            shipsLeft++;
+         }
+         
+      }
+      return shipsLeft;
+      
+   }
 }
