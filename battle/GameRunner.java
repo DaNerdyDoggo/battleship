@@ -8,6 +8,8 @@ public class GameRunner
    private GameBoard player2PlayerBoard;
    private int turn;
    private Scanner inp;
+   private int p2ShipsLeft;
+   private int p1ShipsLeft;
 
    public GameRunner()
    {
@@ -17,6 +19,10 @@ public class GameRunner
       player2PlayerBoard = new GameBoard();
       turn = 1;
       inp = new Scanner(System.in);
+
+      p1ShipsLeft = 4;
+
+      p2ShipsLeft = 4;
    }
 
    //clear text
@@ -32,7 +38,7 @@ public class GameRunner
       player1PlayerBoard.placeShips(inp, "Submarine 1", 2,2);
       player1PlayerBoard.placeShips(inp, "Submarine 2", 2,3);
       
-      //clear screen
+      clearConsole();
       System.out.print("Player 2 is now placing their ships! Player 1 should now turn away from the screen.\nPlayer 2 should press ENTER when ready.");
       inp.nextLine();
 
@@ -41,13 +47,14 @@ public class GameRunner
       player2PlayerBoard.placeShips(inp, "Submarine 1", 2,2);
       player2PlayerBoard.placeShips(inp, "Submarine 2", 2,3);
       
-      //clear console
+      clearConsole();
+      
       while(turn>0)
       {
-         int pGuess;
+         int pGuess =0;
          if(turn % 2 ==0)
          {
-            //clear console
+            clearConsole();
             System.out.println("Player 2 is now going to make a move! Player 1 should turn away from the screen.\nPress ENTER when ready.");
             inp.nextLine();
             //player 1 guess info
@@ -56,20 +63,34 @@ public class GameRunner
          {
             if(turn > 1)
             {
-               //clear console
+               clearConsole();
                System.out.println("Player 1 is now going to make a move! Player 2 should turn away from the screen.\nPress ENTER when ready.");
                inp.nextLine();
                //player 2 guess info
+               System.out.println(guessOutput(pGuess, "Player 1", false, player2PlayerBoard));
+
+               viewPlayerBoard(player1GuessBoard);
+            
+               pGuess = player1GuessBoard.guess(inp, player2PlayerBoard);
+
+               System.out.println(guessOutput(pGuess, "Player 1", true, player2PlayerBoard));
+               p2ShipsLeft = player2PlayerBoard.whichLeft();
             }
             else
             {
+               clearConsole();
                System.out.println("Player 1 is now going to make the first move! Player 2 should turn away from the screen.\nPress ENTER when ready.");
                inp.nextLine();
+
+               System.out.println(guessOutput(pGuess, "Player 2", false, player1PlayerBoard));
             }
             
             viewPlayerBoard(player1GuessBoard);
             
             pGuess = player1GuessBoard.guess(inp, player2PlayerBoard);
+
+            System.out.println(guessOutput(pGuess, "Player 1", true, player2PlayerBoard));
+            p2ShipsLeft = player2PlayerBoard.whichLeft();
          }
       }
       
@@ -103,6 +124,49 @@ public class GameRunner
    }
    
    //method that will return the string with the miss/hit and the info the player will recieve 
+   //true for player that guess false for opposing player
+
+   public String guessOutput(int ind, String player, boolean p, GameBoard board)
+   {
+
+      String s ="";
+
+      if(p)
+      {
+         if(ind == -1)
+         {
+            s = "You missed";
+         }
+         else
+         {
+            s = "You hit a ship";
+         }
+      }
+      else
+      {
+         if(ind == -1)
+         {
+            s = player + " has missed in their turn";
+         }
+         else
+         {
+            s = player + " hit your " + board.getShip(ind).getName();
+         }
+      }
+
+      return s;
+   }
+
+   public void clearConsole()
+   {
+      String clr = "";
+
+      for(int i =0; i< 100; i++)
+      {
+         clr += "\n";
+      }
+      System.out.print(clr);
+   }
 
  
 }
