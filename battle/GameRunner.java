@@ -6,10 +6,10 @@ public class GameRunner
    private GameBoard player1PlayerBoard;
    private GameBoard player2GuessBoard;
    private GameBoard player2PlayerBoard;
-   private int turn;
+   private int turn, p1ShipsLeft, p2ShipsLeft;
    private Scanner inp;
-   private int p2ShipsLeft;
-   private int p1ShipsLeft;
+   //private int p2ShipsLeft;
+   //private int p1ShipsLeft;
 
    public GameRunner()
    {
@@ -21,7 +21,6 @@ public class GameRunner
       inp = new Scanner(System.in);
 
       p1ShipsLeft = 4;
-
       p2ShipsLeft = 4;
    }
 
@@ -33,6 +32,8 @@ public class GameRunner
       System.out.print("Player 1 is now placing their ships! Player 2 should now turn away from the screen.\nPlayer 1 should press ENTER when ready.");
       inp.nextLine();
       
+      clearConsole();
+      System.out.println(player1PlayerBoard.printGrid());
       player1PlayerBoard.placeShips(inp, "Carrier", 5,0);
       player1PlayerBoard.placeShips(inp, "Battleship", 4,1);
       player1PlayerBoard.placeShips(inp, "Submarine 1", 2,2);
@@ -42,6 +43,8 @@ public class GameRunner
       System.out.print("Player 2 is now placing their ships! Player 1 should now turn away from the screen.\nPlayer 2 should press ENTER when ready.");
       inp.nextLine();
 
+      clearConsole();
+      System.out.println(player2PlayerBoard.printGrid());
       player2PlayerBoard.placeShips(inp, "Carrier", 5,0);
       player2PlayerBoard.placeShips(inp, "Battleship", 4,1);
       player2PlayerBoard.placeShips(inp, "Submarine 1", 2,2);
@@ -49,7 +52,7 @@ public class GameRunner
       
       clearConsole();
       
-      while(turn>0)
+      while(true)
       {
          int pGuess =0;
          if(turn % 2 ==0)
@@ -58,6 +61,15 @@ public class GameRunner
             System.out.println("Player 2 is now going to make a move! Player 1 should turn away from the screen.\nPress ENTER when ready.");
             inp.nextLine();
             //player 1 guess info
+            System.out.println(guessOutput(pGuess, "Player 2", false, player1PlayerBoard));
+            viewPlayerBoard(player2GuessBoard);
+            
+            pGuess = player2GuessBoard.guess(inp, player1PlayerBoard);
+
+            System.out.println(guessOutput(pGuess, "Player 2", true, player1PlayerBoard));
+            p1ShipsLeft = player1PlayerBoard.whichLeft();
+            System.out.println("Press ENTER to end turn...");
+            inp.nextLine();
          }
          else
          {
@@ -68,13 +80,8 @@ public class GameRunner
                inp.nextLine();
                //player 2 guess info
                System.out.println(guessOutput(pGuess, "Player 1", false, player2PlayerBoard));
-
-               viewPlayerBoard(player1GuessBoard);
-            
-               pGuess = player1GuessBoard.guess(inp, player2PlayerBoard);
-
-               System.out.println(guessOutput(pGuess, "Player 1", true, player2PlayerBoard));
-               p2ShipsLeft = player2PlayerBoard.whichLeft();
+               System.out.println("Press ENTER to continue...");
+               inp.nextLine();
             }
             else
             {
@@ -82,7 +89,6 @@ public class GameRunner
                System.out.println("Player 1 is now going to make the first move! Player 2 should turn away from the screen.\nPress ENTER when ready.");
                inp.nextLine();
 
-               System.out.println(guessOutput(pGuess, "Player 2", false, player1PlayerBoard));
             }
             
             viewPlayerBoard(player1GuessBoard);
@@ -91,7 +97,27 @@ public class GameRunner
 
             System.out.println(guessOutput(pGuess, "Player 1", true, player2PlayerBoard));
             p2ShipsLeft = player2PlayerBoard.whichLeft();
+
+            System.out.println("Press ENTER to end turn...");
+            inp.nextLine();
          }
+         
+         if(p1ShipsLeft == 0)
+         {
+            System.out.println("Player 2 Wins!");
+            break;
+         }
+         else if(p2ShipsLeft == 0)
+         {
+            System.out.println("Player 1 Wins!");
+            break;
+         }
+         else
+         {
+            turn++;
+            continue;
+         }
+      
       }
       
       //close input when done
@@ -120,6 +146,8 @@ public class GameRunner
       if(ans.equals("y"))
       {
          System.out.println(board.printGrid());
+         System.out.println("Press ENTER to continue...");
+         inp.nextLine();
       }
    }
    

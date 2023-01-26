@@ -68,7 +68,7 @@ public class GameBoard
       if(!isInvalidCoord(coord))
       {
          System.out.println("Invlaid coordinate");
-         guess(input, b);
+         return guess(input, b);
       }
       
       if(otherBoard[getYCoord(coord)][getXCoord(coord)].equals("~"))
@@ -81,7 +81,7 @@ public class GameBoard
       {
          System.out.println("You have already guessed this spot! Pick another. (Press ENTER to continue)");
          input.nextLine();
-         guess(input, b);
+         return guess(input, b);
       }
       else
       {
@@ -108,6 +108,7 @@ public class GameBoard
          //clear console and add explaination if needed
          System.out.println("Invlaid coordinate");
          placeShips(input, name, len, shipNum);
+         return;
       }
       
       System.out.println("Do you want to place you ship downwards or to the right? (Press 1 to place downwards or Press 2 to place to the right): ");
@@ -134,21 +135,29 @@ public class GameBoard
          //vertical placement
          for(int col= 0; col < len; col++)
          {
+
             String c = X_COORDINATES.substring(getXCoord(coord), getXCoord(coord)+1) + (getYCoord(coord)+col);
-            System.out.println(c);
             if(isInvalidCoord(c) && grid[col + getYCoord(coord)][getXCoord(coord)].equals("~"))
             {
-            
-                  grid[col + getYCoord(coord)][getXCoord(coord)] = sym;
-                  coordArr[col] = c;
+               grid[col + getYCoord(coord)][getXCoord(coord)] = sym;
+               coordArr[col] = c;
             }
             else
             {
                //invalid
                System.out.println("Ship is out of bounds or is overlapping with another ship! Choose another place for your " + name + "...\n(press ENTER to continue)");
                input.nextLine();
+
+               for(String cr: coordArr)
+               {
+                  if(cr != null)
+                  {
+                     grid[getYCoord(cr)][getXCoord(cr)] = "~";
+                  }
+               }
                
                placeShips(input, name, len, shipNum);
+               return;
             }            
          }
          
@@ -158,6 +167,22 @@ public class GameBoard
          //horiz placement 
          for(int row =0; row < len; row++)
          {
+            if((getXCoord(coord) + row)+1  >= X_COORDINATES.length())
+            {
+               System.out.println("Ship is out of bounds! Choose another place for your " + name + "...\n(press ENTER to continue)");
+               input.nextLine();
+               //reset grid
+               for(String cr: coordArr)
+               {
+                  if(cr != null)
+                  {
+                     grid[getYCoord(cr)][getXCoord(cr)] = "~";
+                  }
+               }
+               placeShips(input, name, len, shipNum);
+               return;
+            }
+
             String c = X_COORDINATES.substring((getXCoord(coord) + row),(getXCoord(coord) + row)+1) + getYCoord(coord);
             if(isInvalidCoord(c) && grid[getYCoord(coord)][getXCoord(coord) + row].equals("~"))
             {
@@ -170,8 +195,15 @@ public class GameBoard
                System.out.println("Ship is out of bounds or is overlapping with another ship! Choose another place for your " + name + "...\n(press ENTER to continue)");
                input.nextLine();
                //reset grid
+               for(String cr: coordArr)
+               {
+                  if(cr != null)
+                  {
+                     grid[getYCoord(cr)][getXCoord(cr)] = "~";
+                  }
+               }
                placeShips(input, name, len, shipNum);
-
+               return;
             }
          }
       }
@@ -198,12 +230,10 @@ public class GameBoard
             grid[getYCoord(c)][getXCoord(c)] = "~";
          }
          placeShips(input, name, len, shipNum);
+         return;
       }
-      else
-      {
-         ships[shipNum] = new Ships(name, sym, coordArr);
-      }
-      
+      ships[shipNum] = new Ships(name, sym, coordArr);
+      return;
    }
       
    public boolean isInvalidCoord(String c)
