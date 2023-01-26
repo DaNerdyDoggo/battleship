@@ -169,7 +169,7 @@ public class GameBoard
                //invalid
                System.out.println("Ship is out of bounds or is overlapping with another ship! Choose another place for your " + name + "...\n(press ENTER to continue)");
                input.nextLine();
-               
+               //reset grid
                placeShips(input, name, len, shipNum);
 
             }
