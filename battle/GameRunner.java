@@ -51,17 +51,17 @@ public class GameRunner
       player2PlayerBoard.placeShips(inp, "Submarine 2", 2,3);
       
       clearConsole();
-      
+      int pGuess =0;
+
       while(true)
       {
-         int pGuess =0;
          if(turn % 2 ==0)
          {
             clearConsole();
             System.out.println("Player 2 is now going to make a move! Player 1 should turn away from the screen.\nPress ENTER when ready.");
             inp.nextLine();
             //player 1 guess info
-            System.out.println(guessOutput(pGuess, "Player 2", false, player1PlayerBoard));
+            System.out.println(guessOutput(pGuess, "Player 1", false, player1PlayerBoard));
             viewPlayerBoard(player2GuessBoard);
             
             pGuess = player2GuessBoard.guess(inp, player1PlayerBoard);
@@ -156,9 +156,7 @@ public class GameRunner
 
    public String guessOutput(int ind, String player, boolean p, GameBoard board)
    {
-
       String s ="";
-
       if(p)
       {
          if(ind == -1)

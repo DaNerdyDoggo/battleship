@@ -233,7 +233,18 @@ public class GameBoard
          return;
       }
       ships[shipNum] = new Ships(name, sym, coordArr);
-      return;
+
+      for(Ships s: ships)
+      {
+         if(s.getName() != null)
+         {
+            System.out.println(s.getName());
+            for(String cd: s.getCoordinates())
+            {
+               System.out.println(cd);
+            }
+         }
+      }
    }
       
    public boolean isInvalidCoord(String c)
