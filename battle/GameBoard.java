@@ -74,7 +74,6 @@ public class GameBoard
       if(otherBoard[getYCoord(coord)][getXCoord(coord)].equals("~"))
       {
          grid[getYCoord(coord)][getXCoord(coord)] = "O";
-         b.setGrid(getXCoord(coord), getYCoord(coord), "O");
          isHit = -1;
       }
       else if(otherBoard[getYCoord(coord)][getXCoord(coord)].equals("X") || otherBoard[getYCoord(coord)][getXCoord(coord)].equals("O"))
@@ -87,7 +86,7 @@ public class GameBoard
       {
          grid[getYCoord(coord)][getXCoord(coord)] = "X";
          b.setGrid(getXCoord(coord), getYCoord(coord), "X");
-         isHit = checkHit(coord);
+         isHit = checkHit(coord, b);
                      
       }
       
@@ -233,18 +232,6 @@ public class GameBoard
          return;
       }
       ships[shipNum] = new Ships(name, sym, coordArr);
-
-      for(Ships s: ships)
-      {
-         if(s.getName() != null)
-         {
-            System.out.println(s.getName());
-            for(String cd: s.getCoordinates())
-            {
-               System.out.println(cd);
-            }
-         }
-      }
    }
       
    public boolean isInvalidCoord(String c)
@@ -297,22 +284,32 @@ public class GameBoard
       return ships[index];
    }
    
+   public Ships[] getShips()
+   {
+      return ships;
+   }
+
    //method that gives the index of which ship has been hit 
-   public int checkHit(String coord)
+   public int checkHit(String coord, GameBoard b)
    {
       int shipHit =0;
+      Ships[] s = b.getShips();
       for(int i=0; i<ships.length;i++)
       {
-         String[] c = ships[i].getCoordinates();
-         for(int j=0; j<c.length; j++)
+         if(s != null)
          {
-            if(c[j].equals(coord))
+            String[] c = s[i].getCoordinates();
+            for(int j=0; j<c.length; j++)
             {
-               shipHit = i;
+               if(c[j].equals(coord))
+               {
+                  shipHit = i;
+                  break;
+               }
             }
          }
       }
-      ships[shipHit].markHitCoord(coord);
+      s[shipHit].markHitCoord(coord);
       return shipHit;
    }
 

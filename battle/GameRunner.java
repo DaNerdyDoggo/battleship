@@ -60,9 +60,11 @@ public class GameRunner
             clearConsole();
             System.out.println("Player 2 is now going to make a move! Player 1 should turn away from the screen.\nPress ENTER when ready.");
             inp.nextLine();
+            clearConsole();
+
             //player 1 guess info
             System.out.println(guessOutput(pGuess, "Player 1", false, player1PlayerBoard));
-            viewPlayerBoard(player2GuessBoard);
+            viewPlayerBoard(player2PlayerBoard);
             
             pGuess = player2GuessBoard.guess(inp, player1PlayerBoard);
 
@@ -78,8 +80,10 @@ public class GameRunner
                clearConsole();
                System.out.println("Player 1 is now going to make a move! Player 2 should turn away from the screen.\nPress ENTER when ready.");
                inp.nextLine();
+               clearConsole();
+               
                //player 2 guess info
-               System.out.println(guessOutput(pGuess, "Player 1", false, player2PlayerBoard));
+               System.out.println(guessOutput(pGuess, "Player 2", false, player2PlayerBoard));
                System.out.println("Press ENTER to continue...");
                inp.nextLine();
             }
@@ -91,7 +95,7 @@ public class GameRunner
 
             }
             
-            viewPlayerBoard(player1GuessBoard);
+            viewPlayerBoard(player1PlayerBoard);
             
             pGuess = player1GuessBoard.guess(inp, player2PlayerBoard);
 
@@ -163,6 +167,10 @@ public class GameRunner
          {
             s = "You missed";
          }
+         else if(board.getShip(ind).getSunk())
+         {
+            s = "You have sunken a " + board.getShip(ind).getName() + "!";
+         }
          else
          {
             s = "You hit a ship";
@@ -173,6 +181,10 @@ public class GameRunner
          if(ind == -1)
          {
             s = player + " has missed in their turn";
+         }
+         else if(board.getShip(ind).getSunk())
+         {
+            s = player + " has sunken your " + board.getShip(ind).getName() + "!";
          }
          else
          {
@@ -187,7 +199,7 @@ public class GameRunner
    {
       String clr = "";
 
-      for(int i =0; i< 100; i++)
+      for(int i =0; i< 200; i++)
       {
          clr += "\n";
       }
